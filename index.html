@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مستشارك قبل القرار | Smart Financial Decision AI</title>
+    <meta name="description" content="محاكي تفاعلي ذكي مدعوم بالذكاء الاصطناعي لتحليل القرارات المالية الكبيرة مثل الأقساط والقروض وتقديم سيناريوهات مستقبلية دقيقة.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- EMBEDDED HIGH-END GLASSMORPHISM STYLES -->
+    <style>
+        :root {
+            --bg-dark: #070a13;
+            --card-bg: rgba(13, 19, 36, 0.65);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --accent-purple: #9d80f5;
+            --accent-cyan: #14b8a6;
+            --accent-cyan-bright: #22d3ee;
+            
+            /* State variables */
+            --color-safe: #10b981;
+            --color-caution: #f59e0b;
+            --color-danger: #ef4444;
+            
+            --text-primary: #f3f4f6;
+            --text-secondary: #a1a1aa;
+            
+            --font-ar: 'Tajawal', sans-serif;
+            --font-en: 'Outfit', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: var(--font-ar);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Background Glowing Elements */
+        .background-glows {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.3;
+            mix-blend-mode: screen;
+            animation: floatGlow 15s infinite ease-in-out alternate;
+        }
+
+        .glow-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.45) 0%, transparent 70%);
+            top: -15%;
+            left: 15%;
+            animation-delay: 0s;
+        }
+
+        .glow-2 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(20, 184, 166, 0.4) 0%, transparent 70%);
+            bottom: -10%;
+            right: 15%;
+            animation-delay: -5s;
+        }
+
+        .glow-3 {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.25) 0%, transparent 70%);
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -10s;
+        }
+
+        @keyframes floatGlow {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                transform: translate(60px, 40px) scale(1.1);
+            }
+        }
+
+        /* Layout Core */
+        .app-layout {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* MAIN WORKSPACE */
+        .main-workspace {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            overflow-y: auto;
+            height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .app-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-area {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .logo-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            border-radius: 16px;
+            filter: blur(8px);
+            opacity: 0.25;
+        }
+
+        .logo-graphic {
+            font-size: 1.8rem;
+            z-index: 2;
+        }
+
+        .title-area h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff 30%, #ccd7f5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .title-area .tagline {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Workspace Grid (Input + Output Panels) */
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1.3fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        /* Glass Panels */
+        .glass-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+        }
+
+        .panel-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 12px;
+        }
+
+        /* Form Styles */
+        .sim-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--accent-purple);
+            margin-top: 5px;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 12px;
+            font-size: 1rem;
+            pointer-events: none;
+        }
+
+        .input-wrapper input, .input-wrapper select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 11px 40px 11px 12px;
+            color: #fff;
+            font-family: var(--font-ar);
+            font-size: 0.95rem;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .input-wrapper input:focus, .input-wrapper select:focus {
+            border-color: var(--accent-purple);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 0 4px rgba(157, 128, 245, 0.15);
+        }
+
+        .input-wrapper select option {
+            background: #0f1424;
+            color: #fff;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #7c3aed, #06b6d4);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            font-family: var(--font-ar);
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(124, 58, 237, 0.25);
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px rgba(124, 58, 237, 0.4);
+            background: linear-gradient(135deg, #8b5cf6, #0891b2);
+        }
+
+        .submit-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Dashboard Placeholders & Results */
+        .dashboard-placeholder {
+            height: 380px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border: 2px dashed rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 40px;
+        }
+
+        .placeholder-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            max-width: 320px;
+        }
+
+        .placeholder-icon {
+            font-size: 3rem;
+            animation: bouncePlaceholder 4s infinite ease-in-out;
+        }
+
+        @keyframes bouncePlaceholder {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .placeholder-content h4 {
+            font-size: 1.15rem;
+            color: #fff;
+        }
+
+        .placeholder-content p {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* RESULTS ACTIVE DISPLAY */
+        .dashboard-results {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Gauge styling */
+        .gauge-row {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .gauge-container {
+            width: 140px;
+            flex-shrink: 0;
+        }
+
+        .gauge-box {
+            position: relative;
+            width: 100%;
+        }
+
+        .svg-gauge {
+            width: 100%;
+            transform: rotate(0deg);
+        }
+
+        .gauge-text {
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .gauge-number {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #fff;
+            font-family: var(--font-en);
+            line-height: 1;
+        }
+
+        .gauge-label {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Smooth SVG transitions for gauge filling */
+        #gauge-fill {
+            transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gauge-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .safety-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .safety-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-right: 8px;
+        }
+
+        .safety-badge.green {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--color-safe);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .safety-badge.orange {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--color-caution);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .safety-badge.red {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--color-danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .safety-desc {
+            font-size: 0.88rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        /* Scenarios Cards */
+        .section-subtitle {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+            position: relative;
+            padding-right: 12px;
+        }
+
+        .section-subtitle::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 4px;
+            width: 4px;
+            height: 14px;
+            background: var(--accent-purple);
+            border-radius: 4px;
+        }
+
+        .scenarios-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .scenario-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+
+        .scenario-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        #scen-wait:hover {
+            box-shadow: 0 5px 15px rgba(20, 184, 166, 0.15);
+            border-color: rgba(20, 184, 166, 0.3);
+        }
+
+        .scen-header {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .scen-header h5 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .scen-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+            align-self: flex-start;
+        }
+
+        .scen-badge.blue {
+            background: rgba(34, 211, 238, 0.12);
+            color: var(--accent-cyan-bright);
+        }
+
+        .scen-badge.purple {
+            background: rgba(157, 128, 245, 0.12);
+            color: var(--accent-purple);
+        }
+
+        .scen-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 0.8rem;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stat-row span {
+            color: var(--text-secondary);
+        }
+
+        .stat-row strong {
+            color: #fff;
+            font-family: var(--font-en);
+        }
+
+        .scen-ai-advice {
+            font-size: 0.82rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
+
+        /* Liquidity Comparison bars */
+        .liquidity-comparison {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .bar-comparison-container {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 16px;
+        }
+
+        .bar-group {
+            display: grid;
+            grid-template-columns: 110px 1fr 70px;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .bar-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .bar-track {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .bar-progress {
+            height: 100%;
+            border-radius: 6px;
+            width: 0%;
+            transition: width 1s cubic-bezier(0.1, 0.8, 0.2, 1);
+        }
+
+        .bg-rose {
+            background: linear-gradient(90deg, #f43f5e, #e11d48);
+            box-shadow: 0 0 8px rgba(244, 63, 94, 0.3);
+        }
+
+        .bg-emerald {
+            background: linear-gradient(90deg, #10b981, #059669);
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
+        }
+
+        .bg-cyan {
+            background: linear-gradient(90deg, #06b6d4, #0891b2);
+            box-shadow: 0 0 8px rgba(6, 182, 212, 0.3);
+        }
+
+        .bar-value {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-align: left;
+            color: #fff;
+            font-family: var(--font-en);
+        }
+
+        /* APP FOOTER */
+        .app-footer {
+            text-align: center;
+            padding: 20px 0 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* RESPONSIVE MEDIA QUERIES */
+        @media (max-width: 1024px) {
+            .app-layout {
+                flex-direction: column;
+            }
+            .main-workspace {
+                height: auto;
+                padding: 25px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .workspace-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 580px) {
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+            .bar-group {
+                grid-template-columns: 1fr;
+                gap: 6px;
+            }
+            .bar-value {
+                text-align: right;
+            }
+            .gauge-row {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animated Glows -->
+    <div class="background-glows">
+        <div class="glow glow-1" id="glow-1"></div>
+        <div class="glow glow-2" id="glow-2"></div>
+        <div class="glow glow-3" id="glow-3"></div>
+    </div>
+    
+    <!-- Main App Layout Grid -->
+    <div class="app-layout">
+        
+        <!-- MAIN CONTENT AREA -->
+        <main class="main-workspace">
+            <header class="app-header">
+                <div class="logo-area">
+                    <div class="logo-glow"></div>
+                    <span class="logo-graphic">📉🤖</span>
+                </div>
+                <div class="title-area">
+                    <h1>مستشارك قبل القرار</h1>
+                    <p class="tagline">حلل التزاماتك المالية وحاكي مستقبلك المالي في ثوانٍ</p>
+                </div>
+            </header>
+            
+            <div class="workspace-grid">
+                
+                <!-- INPUT FORM COLUMN -->
+                <section class="simulator-input-card glass-panel" id="input-section">
+                    <h3 class="panel-title">📝 أدخل بيانات وضعك المالي</h3>
+                    
+                    <form id="financial-form" class="sim-form">
+                        <!-- Personal Finances Section -->
+                        <div class="form-group-title">1. وضعك المالي الحالي</div>
+                        <div class="input-grid">
+                            <div class="form-group">
+                                <label for="salary">الراتب الشهري الأساسي (ريال)</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon">💵</span>
+                                    <input type="number" id="salary" value="12000" min="1000" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="commitments">الالتزامات والمدفوعات الحالية (ريال)</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon">📉</span>
+                                    <input type="number" id="commitments" value="2500" min="0" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="savings">المدخرات المتوفرة حالياً (ريال)</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon">🏦</span>
+                                    <input type="number" id="savings" value="15000" min="0" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Proposed Financial Decision Section -->
+                        <div class="form-group-title">2. القرار المالي المستقبلي المقترح</div>
+                        <div class="input-grid">
+                            <div class="form-group">
+                                <label for="decision-type">نوع القرار</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon">🚘</span>
+                                    <select id="decision-type">
+                                        <option value="car">شراء سيارة بالأقساط</option>
+                                        <option value="loan">تمويل شخصي / بنكي</option>
+                                        <option value="rent">عقد إيجار طويل الأجل</option>
+                                        <option value="other">التزامات وأقساط أخرى</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="downpayment">الدفعة الأولى للقرار (ريال)</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon">💰</span>
+                                    <input type="number" id="downpayment" value="10000" min="0" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="monthly-installment">القسط الشهري المطلوب (ريال)</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon">🗓️</span>
+                                    <input type="number" id="monthly-installment" value="2000" min="100" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="duration">مدة الأقساط (بالسنوات)</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon">⏳</span>
+                                    <input type="number" id="duration" value="5" min="1" max="30" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn" id="submit-simulate">
+                            توليد المحاكاة المالية بالذكاء الاصطناعي ✨
+                        </button>
+                    </form>
+                </section>
+                
+                <!-- OUTPUT VISUALIZATION COLUMN -->
+                <section class="simulator-output-card glass-panel" id="output-section">
+                    <h3 class="panel-title">📊 لوحة المحاكاة والتقييم الذكي</h3>
+                    
+                    <div class="dashboard-placeholder" id="db-placeholder">
+                        <div class="placeholder-content">
+                            <span class="placeholder-icon">🤖</span>
+                            <h4>جاهز لتحليل قرارك المالي</h4>
+                            <p>أدخل بياناتك المالية في النموذج الأيمن، واضغط على زر التوليد لرؤية مقياس الأمان، ومقارنة السيناريوهات الثلاثة، والتوقعات المالية المستقبلية.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-results hidden" id="db-results">
+                        <!-- DTI Safety Gauge Section -->
+                        <div class="gauge-row">
+                            <div class="gauge-container">
+                                <div class="gauge-box">
+                                    <!-- Dynamic SVG Gauge -->
+                                    <svg viewBox="0 0 100 50" class="svg-gauge">
+                                        <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#222b3e" stroke-width="8" stroke-linecap="round"/>
+                                        <path id="gauge-fill" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="url(#gauge-grad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="125.6" stroke-dashoffset="125.6"/>
+                                        <defs>
+                                            <linearGradient id="gauge-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                <stop offset="0%" stop-color="#10b981"/>
+                                                <stop offset="50%" stop-color="#f59e0b"/>
+                                                <stop offset="100%" stop-color="#ef4444"/>
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                    <div class="gauge-text">
+                                        <span class="gauge-number" id="dti-percent">0%</span>
+                                        <span class="gauge-label">معدل العبء المالي (DTI)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="gauge-details">
+                                <h4 class="safety-title">مؤشر الأمان المالي: <span id="safety-badge" class="safety-badge green">آمن</span></h4>
+                                <p class="safety-desc" id="safety-text">وضعك المالي مريح جداً بعد إضافة القسط الجديد، ولن يمثل التزاماً ضاغطاً على ميزانيتك.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="card-separator"></div>
+                        
+                        <!-- Dynamic Smart Scenarios Generation -->
+                        <h4 class="section-subtitle">🔮 سيناريوهات المحاكاة الذكية</h4>
+                        
+                        <div class="scenarios-grid">
+                            <!-- Scenario 1: Buy Now -->
+                            <div class="scenario-card" id="scen-now">
+                                <div class="scen-header">
+                                    <h5>1. الشراء والالتزام الآن</h5>
+                                    <span class="scen-badge" id="scen-badge-now">مخاطرة منخفضة</span>
+                                </div>
+                                <div class="scen-stats">
+                                    <div class="stat-row">
+                                        <span>القسط الشهري:</span>
+                                        <strong id="scen-inst-now">2,000 ريال</strong>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span>الادخار المتوقع بعد عام:</span>
+                                        <strong id="scen-save-now">62,000 ريال</strong>
+                                    </div>
+                                </div>
+                                <p class="scen-ai-advice" id="scen-desc-now">بناءً على المعطيات، فإن الشراء الآن خيار سليم بشرط المحافظة على معدلات الإنفاق اليومي دون زيادة.</p>
+                            </div>
+                            
+                            <!-- Scenario 2: Wait 6 Months -->
+                            <div class="scenario-card" id="scen-wait">
+                                <div class="scen-header">
+                                    <h5>2. الانتظار لمدة 6 أشهر</h5>
+                                    <span class="scen-badge blue">توصية الذكاء الاصطناعي</span>
+                                </div>
+                                <div class="scen-stats">
+                                    <div class="stat-row">
+                                        <span>المدخرات الإضافية المجمعة:</span>
+                                        <strong id="scen-accum-wait">45,000 ريال</strong>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span>القسط المقترح الجديد:</span>
+                                        <strong id="scen-inst-wait">1,400 ريال</strong>
+                                    </div>
+                                </div>
+                                <p class="scen-ai-advice" id="scen-desc-wait">الانتظار يمنحك فرصة ذهبية لتجميع دفعة أولى أكبر بمقدار 18,000 ريال، مما يقلل القسط الشهري بنسبة 30% ويزيد هامش الأمان.</p>
+                            </div>
+                            
+                            <!-- Scenario 3: Increase Downpayment -->
+                            <div class="scenario-card" id="scen-opt">
+                                <div class="scen-header">
+                                    <h5>3. زيادة الدفعة الأولى بـ 20%</h5>
+                                    <span class="scen-badge purple">أمثل تكلفة</span>
+                                </div>
+                                <div class="scen-stats">
+                                    <div class="stat-row">
+                                        <span>الدفعة الأولى الجديدة:</span>
+                                        <strong id="scen-down-opt">15,000 ريال</strong>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span>القسط الشهري المعدل:</span>
+                                        <strong id="scen-inst-opt">1,750 ريال</strong>
+                                    </div>
+                                </div>
+                                <p class="scen-ai-advice" id="scen-desc-opt">رفع الدفعة الأولى يقلص قيمة المبلغ الإجمالي المتبقي وبالتالي يخفض القسط ويوفر من الفوائد التراكمية على المدى الطويل.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Liquidity comparison bars -->
+                        <div class="liquidity-comparison">
+                            <h4 class="section-subtitle">📈 مقارنة سيولتك المالية المتبقية بعد سنة</h4>
+                            <div class="bar-comparison-container">
+                                <div class="bar-group">
+                                    <span class="bar-label">الشراء الآن</span>
+                                    <div class="bar-track">
+                                        <div class="bar-progress bg-rose" id="bar-now" style="width: 40%;"></div>
+                                    </div>
+                                    <span class="bar-value" id="bar-value-now">40k ريال</span>
+                                </div>
+                                
+                                <div class="bar-group">
+                                    <span class="bar-label">الانتظار 6 أشهر</span>
+                                    <div class="bar-track">
+                                        <div class="bar-progress bg-emerald" id="bar-wait" style="width: 85%;"></div>
+                                    </div>
+                                    <span class="bar-value" id="bar-value-wait">85k ريال</span>
+                                </div>
+                                
+                                <div class="bar-group">
+                                    <span class="bar-label">زيادة الدفعة الأولى</span>
+                                    <div class="bar-track">
+                                        <div class="bar-progress bg-cyan" id="bar-opt" style="width: 60%;"></div>
+                                    </div>
+                                    <span class="bar-value" id="bar-value-opt">60k ريال</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+            </div>
+            
+            <footer class="app-footer">
+                <p>صناع القرار (FutureLedger) — هاكاثون أمد 2026</p>
+            </footer>
+        </main>
+        
+    </div>
+
+    <!-- EMBEDDED HIGH-END SIMULATOR JAVASCRIPT -->
+    <script>
+        function init() {
+            const form = document.getElementById('financial-form');
+            if (!form) {
+                console.error("Form element 'financial-form' not found!");
+                return;
+            }
+            
+            console.log("Financial form successfully bound. Ready for simulations!");
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                // Retrieve inputs
+                const salary = parseFloat(document.getElementById('salary').value) || 0;
+                const commitments = parseFloat(document.getElementById('commitments').value) || 0;
+                const savings = parseFloat(document.getElementById('savings').value) || 0;
+                const decisionType = document.getElementById('decision-type').value;
+                const downpayment = parseFloat(document.getElementById('downpayment').value) || 0;
+                const installment = parseFloat(document.getElementById('monthly-installment').value) || 0;
+                const durationYears = parseFloat(document.getElementById('duration').value) || 1;
+                
+                // Payload for the Python API
+                const payload = {
+                    salary: salary,
+                    commitments: commitments,
+                    savings: savings,
+                    decisionType: decisionType,
+                    downpayment: downpayment,
+                    installment: installment,
+                    duration: durationYears
+                };
+                
+                // Check if running on local file system (file:///)
+                const isLocalFile = window.location.protocol === 'file:';
+                
+                if (isLocalFile) {
+                    console.log("Running locally via file://. Running client-side JS engine.");
+                    const clientCalculated = runClientSideCalculations(salary, commitments, savings, downpayment, installment, durationYears);
+                    renderResults(clientCalculated, installment, downpayment);
+                    return;
+                }
+                
+                try {
+                    // Try calling the Python API server
+                    const response = await fetch('/api/simulate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('API server returned error');
+                    }
+                    
+                    const data = await response.json();
+                    console.log("Calculated by Python Backend:", data);
+                    renderResults(data, installment, downpayment);
+                    
+                } catch (err) {
+                    // Fallback to client-side JS engine if Python server isn't running
+                    console.warn("Python API Server not active. Running fallback JS engine:", err);
+                    const clientCalculated = runClientSideCalculations(salary, commitments, savings, downpayment, installment, durationYears);
+                    renderResults(clientCalculated, installment, downpayment);
+                }
+            });
+        }
+
+        // Check state to trigger binding correctly
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+
+        // Client-side calculations fallback engine
+        function runClientSideCalculations(salary, commitments, savings, downpayment, installment, durationYears) {
+            const totalCommitments = commitments + installment;
+            const dti = salary > 0 ? totalCommitments / salary : 0;
+            const dtiPercent = Math.min(Math.round(dti * 100), 100);
+            
+            let safetyBadge = "آمن ومستقر";
+            let safetyClass = "green";
+            let safetyText = `وضع مالي ممتاز! تشكل التزاماتك الجديدة مع القديمة <strong style="color: #10b981;">${dtiPercent}%</strong> فقط من الراتب، مما يبقي على فائض مالي مريح للادخار والاستمتاع بمستواك المعيشي.`;
+            
+            if (dti > 0.50) {
+                safetyBadge = "مخاطرة عالية";
+                safetyClass = "red";
+                safetyText = `نسبة الالتزامات الكلية تبلغ <strong style="color: #ef4444;">${dtiPercent}%</strong> من راتبك. هذا يتجاوز الحد الموصى به (45%) وقد يضعك تحت ضغط مالي حاد يؤثر على جودة حياتك اليومية.`;
+            } else if (dti > 0.35) {
+                safetyBadge = "حذر / مقيد";
+                safetyClass = "orange";
+                safetyText = `تصل التزاماتك إلى <strong style="color: #f59e0b;">${dtiPercent}%</strong> من الدخل. وضعك مقبول، لكن هامش المناورة المالي لديك ضيق؛ أي التزام مفاجئ قد يخل بميزانيتك.`;
+            }
+            
+            const totalDurationMonths = durationYears * 12;
+            const assetTotalPrice = downpayment + (installment * totalDurationMonths);
+            const livingExpenses = salary * 0.30;
+            
+            // Scenario 1: Buy Now
+            const monthlySavingsNow = salary - commitments - installment - livingExpenses;
+            const finalSavingsNow = Math.max((savings - downpayment) + (monthlySavingsNow * 12), 0);
+            
+            // Scenario 2: Wait 6 Months
+            const waitMonthlySavingsRate = salary - commitments - livingExpenses;
+            const accumulatedWaitSavings = waitMonthlySavingsRate * 6;
+            const newDownpaymentWait = downpayment + (accumulatedWaitSavings * 0.8);
+            const newFinancedAmountWait = Math.max(assetTotalPrice - newDownpaymentWait, 0);
+            const newInstallmentWait = newFinancedAmountWait > 0 ? Math.round(newFinancedAmountWait / totalDurationMonths) : 0;
+            
+            const monthlySavingsAfterWait = salary - commitments - newInstallmentWait - livingExpenses;
+            const finalSavingsWait = Math.max((savings + accumulatedWaitSavings) - newDownpaymentWait + (monthlySavingsAfterWait * 6), 0);
+            
+            // Scenario 3: Optimize Downpayment
+            const optimalDownpayment = Math.min(downpayment * 1.5, savings);
+            const newFinancedAmountOpt = Math.max(assetTotalPrice - optimalDownpayment, 0);
+            const newInstallmentOpt = Math.round(newFinancedAmountOpt / totalDurationMonths);
+            
+            const monthlySavingsOpt = salary - commitments - newInstallmentOpt - livingExpenses;
+            const finalSavingsOpt = Math.max((savings - optimalDownpayment) + (monthlySavingsOpt * 12), 0);
+            
+            return {
+                dti_percent: dtiPercent,
+                dti: dti,
+                safety_badge: safetyBadge,
+                safety_class: safetyClass,
+                safety_text: safetyText,
+                scenarios: {
+                    now: {
+                        installment: installment,
+                        savings: finalSavingsNow
+                    },
+                    wait: {
+                        installment: newInstallmentWait,
+                        accumulated: accumulatedWaitSavings,
+                        savings: finalSavingsWait
+                    },
+                    opt: {
+                        downpayment: optimalDownpayment,
+                        installment: newInstallmentOpt,
+                        savings: finalSavingsOpt
+                    }
+                }
+            };
+        }
+
+        // Render values and transition dashboard UI elements
+        function renderResults(data, originalInstallment, originalDownpayment) {
+            const placeholder = document.getElementById('db-placeholder');
+            const results = document.getElementById('db-results');
+            
+            placeholder.classList.add('hidden');
+            results.classList.remove('hidden');
+            
+            // Output DOM elements
+            const dtiPercentEl = document.getElementById('dti-percent');
+            const gaugeFill = document.getElementById('gauge-fill');
+            const safetyBadge = document.getElementById('safety-badge');
+            const safetyText = document.getElementById('safety-text');
+            
+            // Scenario 1 elements (Buy Now)
+            const scenBadgeNow = document.getElementById('scen-badge-now');
+            const scenInstNow = document.getElementById('scen-inst-now');
+            const scenSaveNow = document.getElementById('scen-save-now');
+            const scenDescNow = document.getElementById('scen-desc-now');
+            
+            // Scenario 2 elements (Wait 6m)
+            const scenInstWait = document.getElementById('scen-inst-wait');
+            const scenAccumWait = document.getElementById('scen-accum-wait');
+            const scenDescWait = document.getElementById('scen-desc-wait');
+            
+            // Scenario 3 elements (Optimize Downpayment)
+            const scenDownOpt = document.getElementById('scen-down-opt');
+            const scenInstOpt = document.getElementById('scen-inst-opt');
+            const scenDescOpt = document.getElementById('scen-desc-opt');
+            
+            // Progress bar elements
+            const barNow = document.getElementById('bar-now');
+            const barWait = document.getElementById('bar-wait');
+            const barOpt = document.getElementById('bar-opt');
+            const barValueNow = document.getElementById('bar-value-now');
+            const barValueWait = document.getElementById('bar-value-wait');
+            const barValueOpt = document.getElementById('bar-value-opt');
+            
+            // Render text & numbers
+            dtiPercentEl.textContent = `${data.dti_percent}%`;
+            
+            // SVG Gauge
+            const maxDash = 125.6;
+            const targetOffset = maxDash - (Math.min(data.dti, 1) * maxDash);
+            gaugeFill.style.strokeDashoffset = maxDash;
+            setTimeout(() => {
+                gaugeFill.style.strokeDashoffset = targetOffset;
+            }, 50);
+            
+            // Safety levels
+            safetyBadge.textContent = data.safety_badge;
+            safetyBadge.className = `safety-badge ${data.safety_class}`;
+            safetyText.innerHTML = data.safety_text;
+            
+            // --- Render Scenario 1 ---
+            const nowScen = data.scenarios.now;
+            scenInstNow.textContent = `${nowScen.installment.toLocaleString()} ريال`;
+            scenSaveNow.textContent = `${nowScen.savings.toLocaleString()} ريال`;
+            
+            if (data.safety_class === 'red') {
+                scenBadgeNow.textContent = 'غير مستحسن';
+                scenBadgeNow.className = 'scen-badge red';
+                scenDescNow.textContent = 'توقعاتنا تشير إلى أن الشراء الفوري سيؤدي إلى انخفاض سيولتك بشكل حاد بنهاية العام، مما يرفع احتمالية مواجهة عجز مالي.';
+            } else if (data.safety_class === 'orange') {
+                scenBadgeNow.textContent = 'مخاطرة متوسطة';
+                scenBadgeNow.className = 'scen-badge orange';
+                scenDescNow.textContent = 'يمكنك المضي قدماً ولكن مع ضرورة وضع ميزانية صارمة وتقليص النفقات الكمالية لضمان تغطية الالتزام.';
+            } else {
+                scenBadgeNow.textContent = 'خيارات آمنة';
+                scenBadgeNow.className = 'scen-badge green';
+                scenDescNow.textContent = 'الشراء الآن ملائم جداً؛ قدرتك الادخارية جيدة وستتمكن من الحفاظ على رصيد أمان ممتاز بمرور السنة.';
+            }
+            
+            // --- Render Scenario 2 ---
+            const waitScen = data.scenarios.wait;
+            scenInstWait.textContent = `${waitScen.installment.toLocaleString()} ريال`;
+            scenAccumWait.textContent = `+${waitScen.accumulated.toLocaleString()} ريال`;
+            
+            const pctSaved = Math.max(Math.round((1 - waitScen.installment / originalInstallment) * 100), 0);
+            scenDescWait.innerHTML = `الانتظار 6 أشهر يتيح ادخار <strong>${waitScen.accumulated.toLocaleString()} ريال</strong> إضافية. يرتفع الأمان المالي وينخفض قسطك إلى <strong>${waitScen.installment.toLocaleString()} ريال</strong> (وفر بنسبة ${pctSaved}%).`;
+            
+            // --- Render Scenario 3 ---
+            const optScen = data.scenarios.opt;
+            scenDownOpt.textContent = `${optScen.downpayment.toLocaleString()} ريال`;
+            scenInstOpt.textContent = `${optScen.installment.toLocaleString()} ريال`;
+            
+            const diffDown = Math.max(Math.round(optScen.downpayment - originalDownpayment), 0);
+            scenDescOpt.innerHTML = `بزيادة الدفعة الأولى بمقدار <strong>${diffDown.toLocaleString()} ريال</strong>، ينخفض قسطك الشهري إلى <strong>${optScen.installment.toLocaleString()} ريال</strong>، مما يوفر تكاليف تمويلية ويحمي تدفقاتك النقدية.`;
+            
+            // --- Render Liquidity Bars ---
+            const maxSavingsVal = Math.max(nowScen.savings, waitScen.savings, optScen.savings, 1000);
+            const widthNow = Math.max((nowScen.savings / maxSavingsVal) * 100, 8);
+            const widthWait = Math.max((waitScen.savings / maxSavingsVal) * 100, 8);
+            const widthOpt = Math.max((optScen.savings / maxSavingsVal) * 100, 8);
+            
+            barValueNow.textContent = `${Math.round(nowScen.savings/1000)}k ريال`;
+            barValueWait.textContent = `${Math.round(waitScen.savings/1000)}k ريال`;
+            barValueOpt.textContent = `${Math.round(optScen.savings/1000)}k ريال`;
+            
+            setTimeout(() => {
+                barNow.style.width = `${widthNow}%`;
+                barWait.style.width = `${widthWait}%`;
+                barOpt.style.width = `${widthOpt}%`;
+            }, 100);
+        }
+    </script>
+</body>
+</html>
